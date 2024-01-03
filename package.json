@@ -4,8 +4,8 @@
   "private": true,
   "module": "esnext",
   "scripts": {
-    "dev": "prisma generate && next build",
-    "build": "prisma generate && next build",
+    "dev": "prisma generate --schema=src/prisma/schema.prisma && next dev",
+    "build": "prisma generate --schema=src/prisma/schema.prisma && next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -20,6 +20,7 @@
     "next": "14.0.4",
     "next-auth": "^4.24.5",
     "osmtogeojson": "^3.0.0-beta.5",
+    "prisma": "^5.7.1",
     "react": "^18",
     "react-dom": "^18",
     "react-map-gl": "^7.1.7",
