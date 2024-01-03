@@ -1,6 +1,7 @@
+import { NextPage } from 'next';
 import styles from "./styles.module.scss";
 
-export const Page = () => {
+const Page: NextPage = () => {
   return (
     <div className={styles.mapsIndex}>
       <h1>Maps</h1>
