@@ -3,9 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "module": "esnext",
+  "prisma": {
+    "seed": "node --loader ts-node/esm ./prisma/seed.ts"
+  },
   "scripts": {
-    "dev": "prisma generate  && next dev",
-    "build": "prisma generate  && next build",
+    "prisma:generate": "prisma generate --schema=./prisma/schema.prisma",
+    "prisma:seed": "ts-node ./prisma/seed.ts",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -20,7 +25,6 @@
     "next": "14.0.4",
     "next-auth": "^4.24.5",
     "osmtogeojson": "^3.0.0-beta.5",
-    "prisma": "^5.7.1",
     "react": "^18",
     "react-dom": "^18",
     "react-map-gl": "^7.1.7",
@@ -29,11 +33,12 @@
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "^20",
+    "@types/node": "^20.10.6",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }
