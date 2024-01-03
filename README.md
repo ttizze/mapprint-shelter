@@ -1,4 +1,4 @@
-# mapprint-next
+# mapprint-shelter
 
 pnpm i
 
