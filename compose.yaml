@@ -11,6 +11,7 @@ services:
       - "5434:5434"
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
+    user: 503:20
     healthcheck:
       test: "pg_isready --username=postgres"
       interval: 10s
