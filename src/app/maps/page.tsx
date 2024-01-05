@@ -1,12 +1,7 @@
-import { NextPage } from 'next';
-import styles from "./styles.module.scss";
+import { redirect } from 'next/navigation';
 
-const Page: NextPage = () => {
-  return (
-    <div className={styles.mapsIndex}>
-      <h1>Maps</h1>
-    </div>
-  );
+const page = async () => {
+  redirect(`/maps/1`);
 };
 
-export default Page;
+export default page;
