@@ -41,3 +41,7 @@ psql -h localhost -p 5433 -U postgres -d postgres
 ```
 
 If tables are displayed, it's OK.
+
+Tips:
+
+You can use the command npx prisma studio to view the data added through the seed process.
