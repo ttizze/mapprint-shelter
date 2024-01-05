@@ -1,12 +1,15 @@
-const fs = require("fs");
-const path = require("path");
-const { PrismaClient } = require("@prisma/client");
+import fs from "fs";
+import path from "path";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 async function main() {
-  const prisma = new PrismaClient();
-
+  // csvのファイルパス取得
+  const moduleURL = new URL(import.meta.url);
+  const currentDir = path.dirname(moduleURL.pathname);
+  const csvFilePath = path.resolve(currentDir, "shelter-ishikawa.csv");
   try {
-    const csvFilePath = path.resolve(__dirname, "shelter-ishikawa.csv");
     const csvData = fs.readFileSync(csvFilePath, "utf-8");
 
     const rows = csvData.split("\n");

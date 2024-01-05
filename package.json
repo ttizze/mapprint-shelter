@@ -2,6 +2,7 @@
   "name": "mapprint-next",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "module": "esnext",
   "prisma": {
     "seed": "node --loader ts-node/esm ./prisma/seed.ts"
