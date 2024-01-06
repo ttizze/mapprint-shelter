@@ -153,7 +153,7 @@ const Page = () => {
           Maps Number: {id}
         </h1>
       )}
-      <div className="relative h-3/5 flex-1 overflow-hidden sm:h-screen print:h-full border border-blue-600">
+      <div className="relative h-3/5 flex-1 overflow-hidden sm:h-screen print:h-full">
         <Map
           initialViewState={{
             longitude: 137.1083671,
@@ -162,7 +162,7 @@ const Page = () => {
           }}
           hash={true}
           style={{ width: '100%', height: '3000px' }}
-                //   style={{ width: '100%', height: '100%' }}
+          //   style={{ width: '100%', height: '100%' }}
           mapStyle="https://tile.openstreetmap.jp/styles/maptiler-basic-ja/style.json"
           attributionControl={false}
           onLoad={(e) => {
@@ -216,11 +216,11 @@ const Page = () => {
                   <div key={name} className="flex w-full flex-col truncate">
                     {/* 都度追加してください */}
                     {emoji === '🏥' && index === 0 && geoIndex === 0 && (
-                      <span className="mb-2 pl-0.5 truncate">病院</span>
+                      <span className="mb-2 truncate pl-0.5">病院</span>
                     )}
 
                     {emoji === '🏫' && index === 0 && geoIndex === 1 && (
-                      <span className="mb-2 pl-0.5 truncate">学校</span>
+                      <span className="mb-2 truncate pl-0.5">学校</span>
                     )}
                     <li
                       className={
@@ -232,11 +232,11 @@ const Page = () => {
                       }
                     >
                       <div className="flex w-full flex-row items-center">
-                        <span className="flex h-10 w-10 min-w-10 max-w-10 min-h-10 max-h-10 items-center justify-center rounded-full bg-zinc-500">
+                        <span className="flex h-10 max-h-10 min-h-10 w-10 min-w-10 max-w-10 items-center justify-center rounded-full bg-zinc-500">
                           {emoji === '🏥' && <FaHospital className="h-5 w-5 fill-zinc-50 pb-0.5" />}
                           {emoji === '🏫' && <FaSchool className="h-5 w-5 fill-zinc-50 pb-1" />}
                         </span>
-                        <div className="flex flex-col pl-4 truncate">
+                        <div className="flex flex-col truncate pl-4">
                           <span className="font-medium text-zinc-900">{`${index + 1}. ${name}`}</span>
                           <div className="truncate">
                             {typeof address !== 'undefined' && address !== 'undefined undefined' && (
