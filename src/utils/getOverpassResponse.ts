@@ -1,4 +1,4 @@
-import { Md5 } from "ts-md5";
+import { Md5 } from 'ts-md5';
 
 export const getOverpassResponse = async (overpassQuery: string) => {
   const overpassApiUrl = `https://z.overpass-api.de/api/interpreter?data=${encodeURIComponent(
@@ -35,7 +35,7 @@ export const getOverpassResponseJsonWithCache = async (
     try {
       window.localStorage.setItem(key, JSON.stringify(valueToStore));
     } catch (error) {
-      console.error("getOverpassResponseJsonWithCache error:", error);
+      console.error('getOverpassResponseJsonWithCache error:', error);
     }
     return json;
   };
@@ -43,10 +43,7 @@ export const getOverpassResponseJsonWithCache = async (
   const cache = window.localStorage.getItem(key);
   if (cache) {
     const valueFromStore = JSON.parse(cache);
-    if (
-      "resJson" in valueFromStore &&
-      unixtime - cacheSeconds < valueFromStore.unixtime
-    ) {
+    if ('resJson' in valueFromStore && unixtime - cacheSeconds < valueFromStore.unixtime) {
       return valueFromStore.resJson;
     } else {
       return await getAndCache();
