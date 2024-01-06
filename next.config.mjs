@@ -24,7 +24,7 @@ const nextConfig = {
               const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
               do {
                 result = '';
-                for (let i = 0; i < 5; i++) {
+                for (let i = 0; i < 6; i++) {
                   result +=
                     opts.classPrefix + characters.charAt(Math.floor(Math.random() * characters.length));
                 }
