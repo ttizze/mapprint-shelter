@@ -4,17 +4,21 @@ let generatedStrings = new Map();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // ウェブパックの設定
   webpack: (config, { dev }) => {
     config.infrastructureLogging = {
       // Must be checked before deploying
       level: 'error',
     };
 
+    // 開発環境の場合は実行されない
     if (!dev) {
       config.plugins.push(
+        // Tailwind CSS のクラス名を短縮する
         utwm({
           classGenerator: {
-            classPrefix: '',
+            classPrefix: '', // クラス名の先頭に付ける文字列
+            // 関数
             customGenerate: (original, opts, _context) => {
               if (generatedStrings.has(original)) {
                 return generatedStrings.get(original);
@@ -40,6 +44,7 @@ const nextConfig = {
     return config;
   },
 
+  //   カスタムヘッダー
   async headers() {
     return [
       {

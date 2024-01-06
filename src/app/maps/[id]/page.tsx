@@ -161,7 +161,7 @@ const Page = () => {
             zoom: 9,
           }}
           hash={true}
-          style={{ width: '100%', height: '100%'}}
+          style={{ width: '100%', height: '100%' }}
           mapStyle="https://tile.openstreetmap.jp/styles/maptiler-basic-ja/style.json"
           attributionControl={false}
           onLoad={(e) => {
