@@ -12,7 +12,7 @@ module.exports = {
             minifyFontValues: true,
             normalizeUnicode: true,
             normalizeUrl: true,
-            svgo: true,
+            svgo: false,
             discardComments: {
               removeAll: true,
             },
