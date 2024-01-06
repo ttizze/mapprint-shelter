@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams, useSearchParams } from 'next/navigation';
-import { Map, GeolocateControl, NavigationControl, useMap, LngLatBounds } from 'react-map-gl/maplibre';
+import { Map, GeolocateControl, NavigationControl, LngLatBounds } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 import { getOverpassResponseJsonWithCache } from '@/utils/getOverpassResponse';
@@ -153,10 +153,7 @@ const Page = () => {
           Maps Number: {id}
         </h1>
       )}
-      <div className="relative h-3/5 flex-1 sm:h-screen">
-        <div className="absolute bottom-1 right-1 z-20 text-sm font-normal">
-          <p>© OpenMapTiles © OpenStreetMap contributors</p>
-        </div>
+      <div className="relative h-3/5 flex-1 overflow-hidden sm:h-screen print:h-full border border-blue-600">
         <Map
           initialViewState={{
             longitude: 137.1083671,
@@ -164,7 +161,8 @@ const Page = () => {
             zoom: 9,
           }}
           hash={true}
-          style={{ width: '100%', height: '100%' }}
+          style={{ width: '100%', height: '3000px' }}
+                //   style={{ width: '100%', height: '100%' }}
           mapStyle="https://tile.openstreetmap.jp/styles/maptiler-basic-ja/style.json"
           attributionControl={false}
           onLoad={(e) => {
@@ -196,8 +194,11 @@ const Page = () => {
               );
             })}
         </Map>
+        <div className="absolute bottom-1 right-1 z-20 text-sm font-normal">
+          <p>© OpenMapTiles © OpenStreetMap contributors</p>
+        </div>
       </div>
-      <div className="relative flex h-2/5 max-w-full sm:max-w-sm flex-col overflow-hidden sm:h-full sm:w-4/12">
+      <div className="relative flex h-2/5 max-w-full flex-col overflow-hidden sm:h-full sm:w-4/12 sm:max-w-sm">
         {/* <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-zinc-100"></div> 
         あとで実装できたら実装 - メニューバーを画面上部まで引き伸ばす　*/}
         <div className="mt-4 sm:mt-8"></div>
@@ -212,34 +213,34 @@ const Page = () => {
                 if (!name) return null;
 
                 return (
-                  <div key={name} className="flex w-full flex-col overflow-hidden">
+                  <div key={name} className="flex w-full flex-col truncate">
                     {/* 都度追加してください */}
                     {emoji === '🏥' && index === 0 && geoIndex === 0 && (
-                      <span className="mb-2 pl-0.5">病院</span>
+                      <span className="mb-2 pl-0.5 truncate">病院</span>
                     )}
 
                     {emoji === '🏫' && index === 0 && geoIndex === 1 && (
-                      <span className="mb-2 pl-0.5">学校</span>
+                      <span className="mb-2 pl-0.5 truncate">学校</span>
                     )}
                     <li
                       className={
                         index !== geoJsonWithStyle.geojson.features.length - 1
-                          ? 'border-b border-gray-200 pb-4 w-full'
+                          ? 'w-full border-b border-gray-200 pb-4'
                           : emoji === '🏥'
                             ? 'pb-8'
                             : 'pb-4'
                       }
                     >
-                      <div className="flex items-center w-full">
-                        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-500">
+                      <div className="flex w-full flex-row items-center">
+                        <span className="flex h-10 w-10 min-w-10 max-w-10 min-h-10 max-h-10 items-center justify-center rounded-full bg-zinc-500">
                           {emoji === '🏥' && <FaHospital className="h-5 w-5 fill-zinc-50 pb-0.5" />}
                           {emoji === '🏫' && <FaSchool className="h-5 w-5 fill-zinc-50 pb-1" />}
                         </span>
-                        <div className="flex flex-col pl-4">
+                        <div className="flex flex-col pl-4 truncate">
                           <span className="font-medium text-zinc-900">{`${index + 1}. ${name}`}</span>
-                          <div className="overflow-hidden">
+                          <div className="truncate">
                             {typeof address !== 'undefined' && address !== 'undefined undefined' && (
-                              <span className="text-ellipsis pt-0.5 text-sm font-normal text-zinc-400">
+                              <span className="truncate pt-0.5 text-sm font-normal text-zinc-400">
                                 {address ? address : '表示できません'}
                               </span>
                             )}
