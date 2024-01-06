@@ -12,8 +12,7 @@
       "type": "chrome",
       "request": "launch",
       "name": "Next.js: Client",
-      "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}"
+      "url": "http://localhost:3000"
     }
   ]
 }
