@@ -1,5 +1,7 @@
 import utwm from 'unplugin-tailwindcss-mangle/webpack';
 
+let generatedStrings = new Map();
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   webpack: (config, { dev }) => {
@@ -13,6 +15,23 @@ const nextConfig = {
         utwm({
           classGenerator: {
             classPrefix: '',
+            customGenerate: (original, opts, _context) => {
+              if (generatedStrings.has(original)) {
+                return generatedStrings.get(original);
+              }
+
+              let result;
+              const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+              do {
+                result = '';
+                for (let i = 0; i < 5; i++) {
+                  result +=
+                    opts.classPrefix + characters.charAt(Math.floor(Math.random() * characters.length));
+                }
+              } while (Array.from(generatedStrings.values()).includes(result));
+              generatedStrings.set(original, result);
+              return result;
+            },
           },
         })
       );
