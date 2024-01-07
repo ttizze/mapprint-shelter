@@ -4,7 +4,7 @@ let generatedStrings = new Map();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  //   ウェブパックの設定
+  // ウェブパックの設定
   webpack: (config, { dev }) => {
     config.infrastructureLogging = {
       // Must be checked before deploying
