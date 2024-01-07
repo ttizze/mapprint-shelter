@@ -2,14 +2,12 @@
   "name": "mapprint-next",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "module": "esnext",
   "prisma": {
-    "seed": "node --loader ts-node/esm ./prisma/seed.ts"
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "scripts": {
     "prisma:generate": "prisma generate --schema=./prisma/schema.prisma",
-    "prisma:seed": "ts-node ./prisma/seed.ts",
     "prepare": "rm -rf .tw-patch && tw-patch install && tw-patch extract",
     "debug": "NODE_OPTIONS='--inspect' next dev",
     "dev": "prisma generate && next dev",
