@@ -1,25 +1,19 @@
-"use client";
+'use client';
 
-import { useParams, useSearchParams } from "next/navigation";
-import {
-  Map,
-  GeolocateControl,
-  NavigationControl,
-  useMap,
-  LngLatBounds,
-} from "react-map-gl/maplibre";
-import "maplibre-gl/dist/maplibre-gl.css";
+import { useParams, useSearchParams } from 'next/navigation';
+import { Map, GeolocateControl, NavigationControl, LngLatBounds } from 'react-map-gl/maplibre';
+import 'maplibre-gl/dist/maplibre-gl.css';
 
-import { getOverpassResponseJsonWithCache } from "@/utils/getOverpassResponse";
+import { getOverpassResponseJsonWithCache } from '@/utils/getOverpassResponse';
+import { useEffect, useState } from 'react';
+import osmtogeojson from 'osmtogeojson';
+import { Md5 } from 'ts-md5';
+import { FeatureCollection } from 'geojson';
+import { GeoJsonToSomethings } from '@/components/GeoJsonToSomethings';
+import { FaHospital, FaSchool } from 'react-icons/fa';
 
-import styles from "./styles.module.scss";
-import { useEffect, useState } from "react";
-import osmtogeojson from "osmtogeojson";
-import { Md5 } from "ts-md5";
-import { FeatureCollection } from "geojson";
-import { GeoJsonToSomethings } from "@/components/GeoJsonToSomethings";
 // @ts-ignore
-import * as turf from "@turf/turf";
+import * as turf from '@turf/turf';
 
 const hospitalsQuery = `
 [out:json][timeout:30000];
@@ -31,10 +25,20 @@ map_to_area->.a;
 out geom;
 `;
 
+// Style for hospitals
+
 const hospitalsStyle = {
-  color: "rgba(0, 0, 0, 1)",
-  fillColor: "rgba(255, 0, 0, 1)",
-  emoji: "🏥",
+  color: 'rgb(0, 0, 0)',
+  fillColor: 'rgb(255, 0, 0)',
+  emoji: '🏥',
+};
+
+// Style for schools
+
+const schoolsStyle = {
+  color: 'rgb(0, 0, 0)',
+  fillColor: 'rgb(0, 255, 0)',
+  emoji: '🏫',
 };
 
 const schoolsQuery = `
@@ -46,12 +50,6 @@ map_to_area->.a;
 );
 out geom;
 `;
-
-const schoolsStyle = {
-  color: "rgba(0, 0, 0, 1)",
-  fillColor: "rgba(0, 255, 0, 1)",
-  emoji: "🏫",
-};
 
 const overpassQueryWithStyleList = [
   {
@@ -78,25 +76,22 @@ const Page = () => {
   const searchParams = useSearchParams();
   const { id } = useParams();
   const searchParamsString = searchParams.toString();
-  const printMode = searchParamsString === "print=true";
+  const printMode = searchParamsString === 'print=true';
 
   const [loaded, setLoaded] = useState(false);
   const [currentBounds, setCurrentBounds] = useState<LngLatBounds>();
 
-  const [geoJsonWithStyleList, setGeoJsonWithStyleList] = useState<
+  const [geoJsonWithStyleList, setGeoJsonWithStyleList] = useState<Array<GeoJsonWithStyle>>([]);
+
+  const [geoJsonWithStyleListInMapBounds, setGeoJsonWithStyleListInMapBounds] = useState<
     Array<GeoJsonWithStyle>
   >([]);
-
-  const [geoJsonWithStyleListInMapBounds, setGeoJsonWithStyleListInMapBounds] =
-    useState<Array<GeoJsonWithStyle>>([]);
 
   useEffect(() => {
     const thisEffect = async () => {
       setLoaded(true);
       for (const overpassQueryWithStyle of overpassQueryWithStyleList) {
-        const overpassResJson = await getOverpassResponseJsonWithCache(
-          overpassQueryWithStyle.query
-        );
+        const overpassResJson = await getOverpassResponseJsonWithCache(overpassQueryWithStyle.query);
         const newGeojson = osmtogeojson(overpassResJson);
         const md5 = new Md5();
         md5.appendStr(overpassQueryWithStyle.query);
@@ -118,7 +113,7 @@ const Page = () => {
       setLoaded(true);
       thisEffect();
     }
-  }, [loaded, overpassQueryWithStyleList]);
+  }, [loaded]);
 
   useEffect(() => {
     if (!geoJsonWithStyleList) return;
@@ -134,18 +129,16 @@ const Page = () => {
           currentBounds.getEast(),
           currentBounds.getNorth(),
         ];
-        const geojsonInMapBounds = geoJsonWithStyle.geojson.features.filter(
-          (feature) => {
-            // use turf.js to check if feature is in map bounds
-            const poly = turf.bboxPolygon(currentMapBbox);
-            const isInside = turf.booleanContains(poly, feature);
-            return isInside;
-          }
-        );
+        const geojsonInMapBounds = geoJsonWithStyle.geojson.features.filter((feature) => {
+          // use turf.js to check if feature is in map bounds
+          const poly = turf.bboxPolygon(currentMapBbox);
+          const isInside = turf.booleanContains(poly, feature);
+          return isInside;
+        });
         return {
           ...geoJsonWithStyle,
           geojson: {
-            type: "FeatureCollection",
+            type: 'FeatureCollection',
             features: geojsonInMapBounds,
           },
         };
@@ -154,12 +147,13 @@ const Page = () => {
   }, [geoJsonWithStyleList, currentBounds]);
 
   return (
-    <div className={printMode ? styles.mapPrint : styles.mapWeb}>
-      <h1>Maps: {id}</h1>
-      <div className={styles.attributionWrap}>
-        <p>© OpenMapTiles © OpenStreetMap contributors</p>
-      </div>
-      <div className={styles.mapWrap}>
+    <div className="flex h-screen w-screen flex-col sm:flex-row-reverse">
+      {process.env.NODE_ENV === 'development' && (
+        <h1 className="absolute left-2.5 top-2.5 z-50 rounded-md bg-black bg-opacity-75 p-1.5 text-xs text-white">
+          Maps Number: {id}
+        </h1>
+      )}
+      <div className="relative h-3/5 flex-1 overflow-hidden sm:h-screen print:h-full">
         <Map
           initialViewState={{
             longitude: 137.1083671,
@@ -167,8 +161,8 @@ const Page = () => {
             zoom: 9,
           }}
           hash={true}
-          style={{ width: "100%", height: "100%" }}
-          mapStyle="https://tile.openstreetmap.jp/styles/osm-bright-ja/style.json"
+          style={{ width: '100%', height: '100%' }}
+          mapStyle="https://tile.openstreetmap.jp/styles/maptiler-basic-ja/style.json"
           attributionControl={false}
           onLoad={(e) => {
             setCurrentBounds(e.target.getBounds());
@@ -199,45 +193,61 @@ const Page = () => {
               );
             })}
         </Map>
+        <div className="absolute bottom-1 right-1 z-20 text-sm font-normal">
+          <p>© OpenMapTiles © OpenStreetMap contributors</p>
+        </div>
       </div>
-      <div className={styles.markersWrap}>
-        <ul
-          style={{
-            listStyle: "none",
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-          }}
-        >
+      <div className="relative flex h-2/5 max-w-full flex-col overflow-hidden sm:h-full sm:w-4/12 sm:max-w-sm">
+        {/* <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-zinc-100"></div> 
+        あとで実装できたら実装 - メニューバーを画面上部まで引き伸ばす　*/}
+        <div className="mt-4 sm:mt-8"></div>
+        <ul className="mx-auto block w-[90%] list-none space-y-4 overflow-scroll py-4">
           {geoJsonWithStyleListInMapBounds &&
-            geoJsonWithStyleListInMapBounds.map((geoJsonWithStyle) => {
+            geoJsonWithStyleListInMapBounds.map((geoJsonWithStyle, geoIndex) => {
               const emoji = geoJsonWithStyle.style?.emoji;
               return geoJsonWithStyle.geojson.features.map((feature, index) => {
                 const name = feature.properties?.name;
+                const address: string =
+                  feature.properties?.['KSJ2:AdminArea'] + ' ' + feature.properties?.['KSJ2:ADS'];
                 if (!name) return null;
+
                 return (
-                  <li
-                    key={name}
-                    style={{
-                      margin: "10px",
-                    }}
-                  >
-                    <span
-                      style={{
-                        backgroundColor: geoJsonWithStyle.style?.fillColor,
-                        color: geoJsonWithStyle.style?.color,
-                        backdropFilter: "blur(4px)",
-                        borderRadius: "4px",
-                        padding: "2px 4px",
-                        fontFamily: "sans-serif, emoji",
-                        lineHeight: "1.1",
-                        WebkitPrintColorAdjust: "exact",
-                        marginRight: "8px",
-                      }}
+                  <div key={name} className="flex w-full flex-col truncate">
+                    {/* 都度追加してください */}
+                    {emoji === '🏥' && index === 0 && geoIndex === 0 && (
+                      <span className="mb-2 truncate pl-0.5">病院</span>
+                    )}
+
+                    {emoji === '🏫' && index === 0 && geoIndex === 1 && (
+                      <span className="mb-2 truncate pl-0.5">学校</span>
+                    )}
+                    <li
+                      className={
+                        index !== geoJsonWithStyle.geojson.features.length - 1
+                          ? 'w-full border-b border-gray-200 pb-4'
+                          : emoji === '🏥'
+                            ? 'pb-8'
+                            : 'pb-4'
+                      }
                     >
-                      {emoji} {index + 1}
-                    </span>
-                    : <span>{name}</span>
-                  </li>
+                      <div className="flex w-full flex-row items-center">
+                        <span className="flex h-10 max-h-10 min-h-10 w-10 min-w-10 max-w-10 items-center justify-center rounded-full bg-zinc-500">
+                          {emoji === '🏥' && <FaHospital className="h-5 w-5 fill-zinc-50 pb-0.5" />}
+                          {emoji === '🏫' && <FaSchool className="h-5 w-5 fill-zinc-50 pb-1" />}
+                        </span>
+                        <div className="flex flex-col truncate pl-4">
+                          <span className="font-medium text-zinc-900">{`${index + 1}. ${name}`}</span>
+                          <div className="truncate">
+                            {typeof address !== 'undefined' && address !== 'undefined undefined' && (
+                              <span className="truncate pt-0.5 text-sm font-normal text-zinc-400">
+                                {address ? address : '表示できません'}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  </div>
                 );
               });
             })}
