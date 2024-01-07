@@ -17,6 +17,9 @@ dependencies:
   '@types/geojson':
     specifier: ^7946.0.13
     version: 7946.0.13
+  esm:
+    specifier: ^3.2.25
+    version: 3.2.25
   glob:
     specifier: ^10.3.10
     version: 10.3.10
@@ -2399,6 +2402,11 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /esm@3.2.25:
+    resolution: {integrity: sha512-U1suiZ2oDVWv4zPO56S0NcR5QriEahGtdN2OR6FiOG4WJvcjBVFB0qI4+eKoWFH483PKGuLuu6V8Z4T5g63UVA==, tarball: https://registry.npmjs.org/esm/-/esm-3.2.25.tgz}
+    engines: {node: '>=6'}
+    dev: false
 
   /espree@9.6.1:
     resolution: {integrity: sha512-oruZaFkjorTpF32kDSI5/75ViwGeZginGGy2NoOSg3Q9bnwlnmDm4HLnkl0RE3n+njDXR037aY1+x58Z/zFdwQ==}

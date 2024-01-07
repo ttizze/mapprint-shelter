@@ -20,6 +20,7 @@
     "@prisma/client": "^5.7.1",
     "@turf/turf": "^6.5.0",
     "@types/geojson": "^7946.0.13",
+    "esm": "^3.2.25",
     "glob": "^10.3.10",
     "js-yaml": "^4.1.0",
     "maplibre-gl": "^3.6.2",

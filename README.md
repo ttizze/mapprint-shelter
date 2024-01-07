@@ -45,3 +45,8 @@ If tables are displayed, it's OK.
 Tips:
 
 You can use the command npx prisma studio to view the data added through the seed process.
+
+# Map
+
+We are using the GeoJson format.
+https://ja.wikipedia.org/wiki/GeoJSON
